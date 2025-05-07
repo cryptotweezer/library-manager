@@ -1,19 +1,19 @@
-<?php include('header.php'); ?> 
+<?php include('header.php'); ?> <!-- Adds the top part of the HTML (head, nav, etc.) -->
 
-<!-- Main heading with a link to show all books -->
-<h2 style="color: orange;">
-    <a href="." style="text-decoration: none; color: orange;">Book List</a>
+<!-- Page title with a link that reloads all books -->
+<h2 class="page-title">
+    <a href="." class="page-title-link">Book List</a> <!-- 📝 You can change the title text here -->
 </h2>
 
-<!-- Layout: sidebar and main content side-by-side -->
-<div class="main-container" style="display: flex; gap: 40px; align-items: flex-start;">
+<!-- This section puts categories on the left and book list on the right -->
+<div class="main-container">
 
-    <!-- Sidebar: shows all categories as links -->
+    <!-- Left: list of categories -->
     <div class="sidebar">
         <h3>Categories</h3>
-        <ul style="list-style-type: none; padding: 0;">
-            <?php foreach ($categories as $category) : ?> <!-- ✅ Uses array and foreach (rubric) -->
-                <li style="margin-bottom: 8px;">
+        <ul class="category-list">
+            <?php foreach ($categories as $category) : ?>
+                <li class="category-item"> <!-- 📝 If you want to adjust spacing between items, see style.css `.category-item` -->
                     <a href=".?category_id=<?php echo $category['categoryID']; ?>">
                         <?php echo htmlspecialchars($category['categoryName']); ?>
                     </a>
@@ -22,55 +22,62 @@
         </ul>
     </div>
 
-    <!-- Book list for selected category -->
+    <!-- Right: list of books -->
     <div class="booklist">
-        <h3 style="color: orange;"><?php echo $category_name; ?></h3> <!-- Dynamic category name -->
+        <!-- Shows selected category -->
+        <h3 class="category-title"><?php echo $category_name; ?></h3>
 
-        <table border="1" cellpadding="5">
+        <!-- Error messages -->
+        <?php if (!empty($error_message)) : ?>
+            <p class="error-message"><?php echo htmlspecialchars($error_message); ?></p>
+        <?php endif; ?>
+
+        <!-- Table displaying books -->
+        <table class="book-table">
             <tr>
                 <th>Code</th>
                 <th>Name</th>
                 <th>Price</th>
-                <th>Actions</th> 
+                <th>Actions</th>
             </tr>
 
-            <?php foreach ($products as $product) : ?> <!--Uses array and foreach (rubric) -->
+            <!-- Loop through books -->
+            <?php foreach ($products as $product) : ?>
                 <tr>
                     <td><?php echo htmlspecialchars($product['productCode']); ?></td>
                     <td><?php echo htmlspecialchars($product['productName']); ?></td>
                     <td><?php echo htmlspecialchars($product['listPrice']); ?></td>
                     <td>
-                        <!-- Delete form -->
-                        <form action="." method="post" style="display:inline;">
-                            <input type="hidden" name="action" value="delete_product"> <!--delete functionality-->
+                        <!-- Delete button -->
+                        <form action="." method="post" class="inline-form">
+                            <input type="hidden" name="action" value="delete_product">
                             <input type="hidden" name="product_id" value="<?php echo $product['productID']; ?>">
-                            <input type="submit" value="Delete">
+                            <input type="hidden" name="category_id" value="<?php echo $category_id; ?>"> <!-- ✅ Keeps current category -->
+                            <input type="submit" class="btn-delete" value="Delete"> <!-- 📝 You can rename this button -->
                         </form>
 
-                        <!-- Modify form -->
-                        <form action="." method="post" style="display:inline;">
-                            <input type="hidden" name="action" value="show_modify_form"> <!-- modify functionality-->
+                        <!-- Modify button -->
+                        <form action="." method="post" class="inline-form">
+                            <input type="hidden" name="action" value="show_modify_form">
                             <input type="hidden" name="product_id" value="<?php echo $product['productID']; ?>">
-                            <input type="submit" value="Modify">
+                            <input type="submit" class="btn-modify" value="Modify">
                         </form>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </table>
 
-        <!-- Functional links for additional actions -->
-        <div style="margin-top: 20px;">
-            <a href=".?action=show_add_form">Add Book</a><br><br> <!-- ✅ add functionality (rubric) -->
-
-            <!-- Sort options (ASC/DESC) -->
-            <a href=".?action=sort_books&order=ASC<?php if (isset($category_id) && $category_id) echo "&category_id=$category_id"; ?>">
+        <!-- Extra action links -->
+        <div class="action-links">
+            <a class="btn-action" href=".?action=show_add_form">Add Book</a><br><br> <!-- 📝 Change text here to rename -->
+            <a class="btn-action" href=".?action=sort_books&order=ASC<?php if (isset($category_id) && $category_id) echo "&category_id=$category_id"; ?>">
                 Sort Book in Ascending Order
             </a><br><br>
-            <a href=".?action=sort_books&order=DESC<?php if (isset($category_id) && $category_id) echo "&category_id=$category_id"; ?>">
+            <a class="btn-action" href=".?action=sort_books&order=DESC<?php if (isset($category_id) && $category_id) echo "&category_id=$category_id"; ?>">
                 Sort Book in Descending Order
-            </a> 
+            </a>
         </div>
     </div>
 </div>
 
-<?php include('footer.php'); ?> 
+<?php include('footer.php'); ?> <!-- Adds footer -->

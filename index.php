@@ -1,33 +1,36 @@
 <?php
-// Start session to use $_SESSION array_push + for loop)
+// ✅ We start the session so we can use session variables (like $_SESSION['recent_books'])
 session_start();
 
-// Load required model files for database, categories, and products
+// ✅ Load the necessary files that handle the database and logic
 require('model/database.php');
 require('model/category_db.php');
 require('model/product_db.php');
 
-// Get category_id from POST or GET
+// ✅ Get selected category from POST or GET
 $category_id = filter_input(INPUT_POST, 'category_id', FILTER_VALIDATE_INT);
 if ($category_id === null) {
     $category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
     if ($category_id === null || $category_id === false) {
-        $category_id = null; // null means show all books from all categories
+        $category_id = null; // means no filter, show all categories
     }
 }
 
-// Get the action (what user wants to do)
+// ✅ Get action from POST or GET (what the user wants to do)
 $action = filter_input(INPUT_POST, 'action');
 if ($action === null) {
     $action = filter_input(INPUT_GET, 'action');
     if ($action === null) {
-        $action = 'list_products'; // Default action
+        $action = 'list_products'; // default action
     }
 }
 
-// Main controller logic
+// This variable will hold any validation error messages
+$error_message = '';
+
 switch ($action) {
 
+    // ✅ Show the list of products
     case 'list_products':
         $categories = get_categories();
 
@@ -47,19 +50,28 @@ switch ($action) {
         include('view/product_list.php');
         break;
 
+    // ✅ Delete a product and stay on the same category
     case 'delete_product':
         $product_id = filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT);
+        $category_id = filter_input(INPUT_POST, 'category_id', FILTER_VALIDATE_INT); // ✅ Ensure category is passed
         if ($product_id) {
             delete_product($product_id);
         }
-        header("Location: .?category_id=$category_id");
+        if ($category_id) {
+            header("Location: .?category_id=$category_id");
+        } else {
+            header("Location: .");
+        }
         break;
+    
 
+    // ✅ Show form to add a book
     case 'show_add_form':
         $categories = get_categories();
         include('view/product_add.php');
         break;
 
+    // ✅ Handle adding a book to the DB
     case 'add_product':
         $category_id = filter_input(INPUT_POST, 'category_id', FILTER_VALIDATE_INT);
         $code = filter_input(INPUT_POST, 'code');
@@ -69,39 +81,28 @@ switch ($action) {
         if ($category_id && $code && $name && $price !== false) {
             add_product($category_id, $code, $name, $price);
 
-            // array_push used here 
+            // 👇 This saves the last added books to a session array
             if (!isset($_SESSION['recent_books'])) {
-                $_SESSION['recent_books'] = []; // Initialize if not set
+                $_SESSION['recent_books'] = [];
             }
-
-            array_push($_SESSION['recent_books'], $name); // Add book name to session array
-
-            // for loop used to display last 3 books (rubric)
-            echo "<!-- Recently Added Books: -->";
-            echo "<div style='display:none;'>"; 
-
-            $recent = $_SESSION['recent_books'];
-            $count = count($recent);
-            $limit = ($count < 3) ? $count : 3;
-
-            for ($i = $count - $limit; $i < $count; $i++) {
-                echo "Recently added: " . htmlspecialchars($recent[$i]) . "<br>";
-            }
-
-            echo "</div>";
+            array_push($_SESSION['recent_books'], $name);
 
             header("Location: .?category_id=$category_id");
         } else {
-            echo "Invalid product data. Check all fields and try again.";
+            $categories = get_categories();
+            $error_message = "⚠️ Please enter valid values for Code, Name, and Price.";
+            include('view/product_add.php');
         }
         break;
 
+    // ✅ Show the modify form for a selected product
     case 'show_modify_form':
         $product_id = filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT);
         $product = get_product($product_id);
         include('view/product_modify.php');
         break;
 
+    // ✅ Handle updating a book
     case 'modify_product':
         $product_id = filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT);
         $name = filter_input(INPUT_POST, 'name');
@@ -109,14 +110,19 @@ switch ($action) {
 
         if ($product_id && $name && $price !== false) {
             update_product($product_id, $name, $price);
+            header("Location: .?category_id=$category_id");
+        } else {
+            $product = get_product($product_id);
+            $error_message = "⚠️ Please enter valid values for Name and Price.";
+            include('view/product_modify.php');
         }
-        header("Location: .?category_id=$category_id");
         break;
 
+    // ✅ Sort books by ASC or DESC name
     case 'sort_books':
         $order = filter_input(INPUT_GET, 'order');
         if ($order !== 'ASC' && $order !== 'DESC') {
-            $order = 'ASC';
+            $order = 'ASC'; // default
         }
 
         $category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
@@ -137,6 +143,7 @@ switch ($action) {
         include('view/product_list.php');
         break;
 
+    // ✅ If the action is not recognized
     default:
         echo "Unknown action: $action";
         break;
