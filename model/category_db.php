@@ -35,4 +35,14 @@ function get_category_name($category_id) {
     return $category['categoryName']; 
     // This returns the name like "Philosophical", which is used in the product list title
 }
+
+function add_category($category_name) {
+    global $db;
+    $query = 'INSERT INTO categories (categoryName) VALUES (:category_name)';
+    $statement = $db->prepare($query);
+    $statement->bindValue(':category_name', $category_name);
+    $statement->execute();
+    $statement->closeCursor();
+}
+
 ?>

@@ -20,19 +20,20 @@
                 </li>
             <?php endforeach; ?>
         </ul>
+        <!-- This section shows all available categories on the left -->
     </div>
 
     <!-- Right side: shows the list of books -->
     <div class="booklist">
         <h3 class="category-title"><?php echo $category_name; ?></h3>
-        <!-- This shows the current category name -->
+        <!-- This shows the current selected category name -->
 
         <?php if (!empty($error_message)) : ?>
             <p class="error-message"><?php echo htmlspecialchars($error_message); ?></p>
         <?php endif; ?>
-        <!-- This displays any validation error message -->
+        <!-- Shows error messages if there are any -->
 
-        <!-- Book list table -->
+        <!-- Table that lists all books -->
         <table class="book-table">
             <tr>
                 <th>Code</th>
@@ -53,7 +54,6 @@
                             <input type="hidden" name="product_id" value="<?php echo $product['productID']; ?>">
                             <input type="hidden" name="category_id" value="<?php echo $category_id; ?>">
                             <input type="submit" class="btn-delete" value="Delete">
-                            <!-- You can change the button text or style in CSS -->
                         </form>
 
                         <!-- Form to modify a book -->
@@ -67,10 +67,13 @@
             <?php endforeach; ?>
         </table>
 
-        <!-- Buttons to add or sort books -->
+        <!-- Buttons to add book, category, or sort -->
         <div class="action-links">
             <a class="btn-action" href=".?action=show_add_form">Add Book</a><br><br>
-            <!-- This goes to the form to add a new book -->
+            <!-- Opens the form to add a new book -->
+
+            <a class="btn-action" href=".?action=show_add_category_form">Add Category</a><br><br>
+            <!-- Opens the form to add a new category -->
 
             <a class="btn-action" href=".?action=sort_books&order=ASC<?php if (isset($category_id) && $category_id) echo "&category_id=$category_id"; ?>">
                 Sort Book in Ascending Order

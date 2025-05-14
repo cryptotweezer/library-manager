@@ -1,40 +1,41 @@
 <?php
-session_start(); // start the session so we can use session variables like recent books
+session_start(); 
+// Start the session so we can use things like $_SESSION['recent_books']
 
-require('model/database.php');      // connects to the database
-require('model/category_db.php');   // functions to work with categories
-require('model/product_db.php');    // functions to work with books (products)
+require('model/database.php');      // Connects to the database
+require('model/category_db.php');   // Functions to get and add categories
+require('model/product_db.php');    // Functions to get, add, delete, update books
 
-// this part checks if a category ID was sent (from form or URL)
+// Get the selected category from a form or URL
 $category_id = filter_input(INPUT_POST, 'category_id', FILTER_VALIDATE_INT);
 if ($category_id === null) {
     $category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
     if ($category_id === null || $category_id === false) {
-        $category_id = null; // if nothing is selected, show all categories
+        $category_id = null; // If no category is selected, show all
     }
 }
 
-// here we check what the user wants to do (add, delete, etc.)
+// Get the action from the form or URL (like 'add_product', 'delete_product', etc.)
 $action = filter_input(INPUT_POST, 'action');
 if ($action === null) {
     $action = filter_input(INPUT_GET, 'action');
     if ($action === null) {
-        $action = 'list_products'; // default if nothing is selected
+        $action = 'list_products'; // Default action is to show book list
     }
 }
 
-$error_message = ''; // we use this to show form error messages if needed
+$error_message = ''; 
+// This will store form error messages (like missing fields)
 
 switch ($action) {
 
     case 'list_products':
-        // this shows the book list either for one category or all
+        // Show all books or just the ones from a selected category
         $categories = get_categories();
 
         if ($category_id === null) {
             $category_name = 'All Books';
             $products = [];
-
             foreach ($categories as $cat) {
                 $cat_products = get_products_by_category($cat['categoryID']);
                 $products = array_merge($products, $cat_products);
@@ -48,14 +49,14 @@ switch ($action) {
         break;
 
     case 'delete_product':
-        // this deletes a book and stays on the same category page
+        // Delete the selected book
         $product_id = filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT);
         $category_id = filter_input(INPUT_POST, 'category_id', FILTER_VALIDATE_INT);
         if ($product_id) {
             delete_product($product_id);
         }
 
-        // after delete, reload the page for the same category
+        // Go back to the same category after delete
         if ($category_id) {
             header("Location: .?category_id=$category_id");
         } else {
@@ -64,32 +65,29 @@ switch ($action) {
         break;
 
     case 'show_add_form':
-        // this shows the form to add a new book
+        // Show the form to add a new book
         $categories = get_categories();
         include('view/product_add.php');
         break;
 
     case 'add_product':
-        // get form values from the "Add Book" form
+        // Add a new book (only if all fields are filled correctly)
         $category_id = filter_input(INPUT_POST, 'category_id', FILTER_VALIDATE_INT);
         $code = filter_input(INPUT_POST, 'code');
         $name = filter_input(INPUT_POST, 'name');
         $price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_FLOAT);
 
-        // only add if all values are valid
         if ($category_id && $code && $name && $price !== false) {
             add_product($category_id, $code, $name, $price);
 
-            // save the last added book in session (just for demo)
+            // Save the name to the session for reference
             if (!isset($_SESSION['recent_books'])) {
                 $_SESSION['recent_books'] = [];
             }
             array_push($_SESSION['recent_books'], $name);
 
-            // go back to the category page
             header("Location: .?category_id=$category_id");
         } else {
-            // if form is incomplete or wrong
             $categories = get_categories();
             $error_message = "Please enter valid values for Code, Name, and Price.";
             include('view/product_add.php');
@@ -97,14 +95,14 @@ switch ($action) {
         break;
 
     case 'show_modify_form':
-        // shows the form to update book name and price
+        // Show the form to update an existing book
         $product_id = filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT);
         $product = get_product($product_id);
         include('view/product_modify.php');
         break;
 
     case 'modify_product':
-        // gets form data and updates book in database
+        // Update a book's name and price
         $product_id = filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT);
         $name = filter_input(INPUT_POST, 'name');
         $price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_FLOAT);
@@ -120,10 +118,10 @@ switch ($action) {
         break;
 
     case 'sort_books':
-        // this part sorts books in ASC or DESC order
+        // Sort books in ascending or descending order
         $order = filter_input(INPUT_GET, 'order');
         if ($order !== 'ASC' && $order !== 'DESC') {
-            $order = 'ASC'; // default sort
+            $order = 'ASC';
         }
 
         $category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
@@ -144,8 +142,26 @@ switch ($action) {
         include('view/product_list.php');
         break;
 
+    case 'show_add_category_form':
+        // Show the form to add a new category
+        include('view/category_add.php');
+        break;
+
+    case 'add_category':
+        // Add the new category to the database
+        $category_name = filter_input(INPUT_POST, 'category_name');
+
+        if ($category_name) {
+            add_category($category_name);
+            header("Location: .");
+        } else {
+            $error_message = "Please enter a category name.";
+            include('view/category_add.php');
+        }
+        break;
+
     default:
-        // just in case the action is not found
+        // If action is not recognized
         echo "Unknown action: $action";
         break;
 }
