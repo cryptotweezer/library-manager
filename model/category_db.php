@@ -45,4 +45,23 @@ function add_category($category_name) {
     $statement->closeCursor();
 }
 
+function delete_category($category_id) {
+    global $db;
+
+    // Optional: You may want to delete books under the category first
+    $query1 = 'DELETE FROM products WHERE categoryID = :category_id';
+    $stmt1 = $db->prepare($query1);
+    $stmt1->bindValue(':category_id', $category_id);
+    $stmt1->execute();
+    $stmt1->closeCursor();
+
+    // Then delete the category itself
+    $query2 = 'DELETE FROM categories WHERE categoryID = :category_id';
+    $stmt2 = $db->prepare($query2);
+    $stmt2->bindValue(':category_id', $category_id);
+    $stmt2->execute();
+    $stmt2->closeCursor();
+}
+
+
 ?>

@@ -160,6 +160,18 @@ switch ($action) {
         }
         break;
 
+    case 'delete_category':
+        // Delete the selected category
+        $category_id = filter_input(INPUT_POST, 'category_id', FILTER_VALIDATE_INT);
+        if ($category_id) {
+            delete_category($category_id);
+            header("Location: .");
+        } else {
+            $error_message = "Invalid category ID.";
+            include('view/category_list.php');
+        }
+
+
     default:
         // If action is not recognized
         echo "Unknown action: $action";

@@ -14,6 +14,15 @@
         <ul class="category-list">
             <?php foreach ($categories as $category) : ?>
                 <li class="category-item">
+
+                    <!-- Button to delete a category -->
+                    <form action="." method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                        <input type="hidden" name="action" value="delete_category">
+                        <input type="hidden" name="category_id" value="<?php echo $category['categoryID']; ?>">
+                        <button type="submit" class="btn-delete-category" title="Delete Category">Delete</button>
+                    </form>
+
+                    <!-- Link to view books in this category -->
                     <a href=".?category_id=<?php echo $category['categoryID']; ?>">
                         <?php echo htmlspecialchars($category['categoryName']); ?>
                     </a>
