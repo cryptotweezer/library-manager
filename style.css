@@ -1,0 +1,204 @@
+/* ======================
+   GLOBAL STYLES
+====================== */
+body {
+    font-family: Arial, sans-serif;
+    margin: 30px;
+    background-color: #fff;
+}
+
+label {
+    font-weight: bold;
+}
+
+a {
+    display: inline-block;
+    margin-right: 15px;
+    color: blue;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* ======================
+   HEADINGS
+====================== */
+h1 {
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+}
+
+h2, .page-title {
+    color: orange;
+    margin-top: 20px;
+}
+
+.page-title-link {
+    text-decoration: none;
+    color: orange;
+}
+
+.category-title {
+    color: orange;
+}
+
+/* ======================
+   LAYOUT
+====================== */
+.main-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.sidebar {
+    width: 200px;
+}
+
+.booklist {
+    flex: 1;
+}
+
+/* ======================
+   CATEGORY LIST
+====================== */
+.category-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.category-list li.category-item {
+    margin-bottom: 10px; /* space between categories */
+}
+
+/* ======================
+   BOOK TABLE
+====================== */
+.book-table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 600px;
+}
+
+.book-table th, 
+.book-table td {
+    border: 1px solid #999;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.book-table th {
+    background-color: #eee;
+}
+
+/* ======================
+   BOOK FORM
+====================== */
+.book-form {
+    max-width: 400px;
+}
+
+.book-form label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.book-form input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    margin-top: 5px;
+}
+
+.book-form input[type="submit"] {
+    margin-top: 15px;
+    padding: 6px 12px;
+}
+
+/* ======================
+   ACTIONS & BUTTONS
+====================== */
+.inline-form {
+    display: inline;
+}
+
+.action-links {
+    margin-top: 20px;
+}
+
+.btn-delete {
+    background-color: #91534b;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 5px;
+    cursor: pointer;
+    border-radius: 6px; /* ✅ Rounded corners */
+    
+}
+
+.btn-modify {
+    background-color: #0095f8;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 6px; /* ✅ Rounded corners */
+}
+
+.btn-action {
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 6px 12px;
+    background-color: #27ae60;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.btn-action:hover,
+.btn-delete:hover,
+.btn-modify:hover {
+    opacity: 0.85;
+}
+
+/* ======================
+   ERRORS & FOOTER
+====================== */
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+footer, .site-footer {
+    margin-top: 40px;
+    font-size: 0.9em;
+    color: #555;
+    text-align: center;
+    border-top: 1px solid #aaa;
+    padding-top: 10px;
+}
+
+.site-footer {
+    border-top: 2px solid #000;
+}
+
+
+.btn-action {
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 6px 12px;
+    background-color: #27ae60;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.btn-action:hover {
+    opacity: 0.85;
+}
