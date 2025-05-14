@@ -1,0 +1,40 @@
+📄 index.php
+- Main controller of the whole application.
+- Handles actions like listing, adding, deleting, modifying, and sorting books.
+- If you want to change how the app responds to buttons or form submissions, this is the file to edit.
+
+📄 product_list.php
+- Displays the list of books and categories in a table format.
+- If you want to change the layout, add new buttons, or adjust how books are shown, update this file.
+
+📄 product_add.php
+- Shows the form to add a new book.
+- To change field labels, placeholders, or validation messages in the form, modify this file.
+
+📄 product_modify.php
+- Shows the form to update a book's name or price.
+- If you want to allow editing more fields (like category or code), add inputs here.
+
+📄 product_db.php
+- Contains all database functions related to books (add, delete, update, get, sort).
+- To change how books are stored or sorted, or to add new fields to the database, modify functions here.
+
+📄 category_db.php
+- Gets category list and names from the database.
+- If you want to change how categories are loaded or displayed, this is the file.
+
+📄 database.php
+- Connects the project to the MySQL database using PDO.
+- If your database login, host, or name changes, update this file.
+
+📄 header.php
+- Adds the top HTML structure (menu, page title, etc.).
+- Change here if you want to update the site navigation or add a logo.
+
+📄 footer.php
+- Adds the bottom of the page (usually student info or copyright).
+- You can customize this with your name, student ID, or extra links.
+
+📄 style.css (if available)
+- This file is for visual styles (colors, spacing, fonts).
+- Any design or layout changes go here.
